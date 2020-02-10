@@ -5,16 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 
 using NAudio.Wave;
+
 namespace Reproductor
 {
-    class EfectoFadeIn : ISampleProvider
+    class EfectoFadeOut : ISampleProvider
     {
         private ISampleProvider fuente;
         private int muestrasLeidas = 0;
         private float segundosTranscurridos = 0;
         private float duracion;
 
-        public EfectoFadeIn(ISampleProvider fuente, float duracion)
+        public EfectoFadeOut(ISampleProvider fuente, float duracion)
         {
             this.fuente = fuente;
             this.duracion = duracion;
@@ -34,19 +35,20 @@ namespace Reproductor
 
             //Ap
             muestrasLeidas += read;
-            segundosTranscurridos = (float)muestrasLeidas / (float)fuente.WaveFormat.SampleRate / (float)fuente.WaveFormat.Channels;
-            
-            if(segundosTranscurridos <= duracion)
+            segundosTranscurridos = (float) / (float)fuente.WaveFormat.SampleRate / (float)fuente.WaveFormat.Channels;
+
+            if (segundosTranscurridos <= duracion)
             {
                 //Aplicar el efecto
                 float factorEscala = segundosTranscurridos / duracion;
-                for (int i=0; i<read; i++)
-                    {
-                    buffer[i + offset] *= factorEscala;
-                    }
+                for (int i = 0; i < read; i++)
+                {
+                    buffer[offset - i] *= factorEscala;
+                }
             }
 
             return read;
         }
     }
+}
 }
