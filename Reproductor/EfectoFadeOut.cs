@@ -14,11 +14,13 @@ namespace Reproductor
         private int muestrasLeidas = 0;
         private float segundosTranscurridos = 0;
         private float duracion;
+        private float inicio;
 
-        public EfectoFadeOut(ISampleProvider fuente, float duracion)
+        public EfectoFadeOut(ISampleProvider fuente, float duracion, float inicio)
         {
             this.fuente = fuente;
             this.duracion = duracion;
+            this.inicio = inicio;
         }
 
         public WaveFormat WaveFormat
@@ -35,15 +37,15 @@ namespace Reproductor
 
             //Ap
             muestrasLeidas += read;
-            segundosTranscurridos = (float) / (float)fuente.WaveFormat.SampleRate / (float)fuente.WaveFormat.Channels;
+            segundosTranscurridos = (float)muestrasLeidas / (float)fuente.WaveFormat.SampleRate / (float)fuente.WaveFormat.Channels;
 
-            if (segundosTranscurridos <= duracion)
+            if (segundosTranscurridos >= duracion)
             {
                 //Aplicar el efecto
-                float factorEscala = segundosTranscurridos / duracion;
+                float factorEscala = segundosTranscurridos * duracion;
                 for (int i = 0; i < read; i++)
                 {
-                    buffer[offset - i] *= factorEscala;
+                    buffer[offset + i] *= factorEscala;
                 }
             }
 
@@ -51,4 +53,4 @@ namespace Reproductor
         }
     }
 }
-}
+
