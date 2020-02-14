@@ -112,11 +112,12 @@ namespace Reproductor
                     float duracionFadeIn = float.Parse(txtDuracion.Text);
                     efectoFadeIn = new EfectoFadeIn(reader,duracionFadeIn);
 
-                    efectoVolumen = new EfectoVolumen(efectoFadeIn);
-                    efectoVolumen.Volumen = (float)(sldVolumen.Value);
-
                     float duracionFadeOut = float.Parse(txtDuracionFadeOut.Text);
-                    //efectoFadeOut = new EfectoFadeOut(reader, duracionFadeOut);
+                    float inicioFadeOut = float.Parse(txtInicioFadeOut.Text);
+                    efectoFadeOut = new EfectoFadeOut(reader, inicioFadeOut, duracionFadeOut);
+
+                    efectoVolumen = new EfectoVolumen(efectoFadeOut);
+                    efectoVolumen.Volumen = (float)(sldVolumen.Value);                                     
 
                     output = new WaveOut();
                     output.DeviceNumber = cbDispositivoSalida.SelectedIndex;
