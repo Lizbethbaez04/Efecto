@@ -57,7 +57,7 @@ namespace Reproductor
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            if(efectoFadeIn !=null)
+            if(efectoFadeIn != null)
             {
                 //lblMuestras.Text = efectoFadeIn.segundosTranscurridos.ToString();
             }
@@ -73,7 +73,7 @@ namespace Reproductor
         {
             cbDispositivoSalida.Items.Clear();
             //DeviceCount regresa el numero de dispositivos de salida que tiene conectados en el dispositivo de audio
-            for(int i =0; i < WaveOut.DeviceCount; i++)
+            for(int i = 0; i < WaveOut.DeviceCount; i++)
             {
                 WaveOutCapabilities capacidades = WaveOut.GetCapabilities(i);
                 cbDispositivoSalida.Items.Add(capacidades.ProductName);
@@ -110,7 +110,7 @@ namespace Reproductor
                     //volume = new VolumeSampleProvider(reader);
                     //volume.Volume = (float)(sldVolumen.Value);
 
-                    efectoDelay = new EfectoDelay(reader, (int)(sldOffsetDelay.Value));
+                    efectoDelay = new EfectoDelay(reader, (int)(sldOffsetDelay.Value), (float)(sldGananciaDelay.Value));
 
                     float duracionFadeIn = float.Parse(txtDuracion.Text);
                     efectoFadeIn = new EfectoFadeIn(efectoDelay,duracionFadeIn);
@@ -166,7 +166,7 @@ namespace Reproductor
 
         private void BtnPausa_Click(object sender, RoutedEventArgs e)
         {
-            if(output !=null )
+            if(output != null )
             {
                 output.Pause();
                 btnReproducir.IsEnabled = true;
@@ -202,7 +202,7 @@ namespace Reproductor
         private void SldOffsetDelay_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             lblOffsetDelay.Text = ((int)(sldOffsetDelay.Value)).ToString();
-            if(efectoDelay!= null)
+            if(efectoDelay != null)
             {
                 efectoDelay.OffsetMiliSegundos = (int)(sldOffsetDelay.Value);
             }
@@ -210,9 +210,13 @@ namespace Reproductor
 
         private void SldGananciaDelay_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if(lblGananciaDelay!=null)
+            if(lblGananciaDelay != null)
             {
                 lblGananciaDelay.Text = sldGananciaDelay.Value.ToString("N");
+                if(efectoDelay != null)
+                {
+                    efectoDelay.Ganancia = (float)(sldGananciaDelay.Value);
+                }
             }
         }
     }

@@ -14,6 +14,28 @@ namespace Reproductor
 
         //Que tanto tiempo quiero que pase para el retraso
         private int offsetMiliSegundos;
+        private float ganancia;
+        public float Ganancia
+        {
+            get
+            {
+                return ganancia;
+            }
+            set
+            {
+                if(value > 1)
+                {
+                    ganancia = 1.0f;
+                }else if(value < 0)
+                {
+                    ganancia = 0.0f;
+                }
+                else
+                {
+                    ganancia = value;
+                }
+            }
+        }
         private List<float> muestras = new List<float>();
         private int tamañoBuffer;
         public int OffsetMiliSegundos
@@ -24,10 +46,10 @@ namespace Reproductor
             }
             set
             {
-                if(value>20000)
+                if(value > 20000)
                 {
                     offsetMiliSegundos = 20000;
-                }else if(value <0)
+                }else if(value < 0)
                 {
                     offsetMiliSegundos = 0;
                 }else
@@ -39,10 +61,11 @@ namespace Reproductor
         private int cantidadMuestrasTranscurridas = 0;
         private int cantidadMuestrasBorradas = 0;
 
-        public EfectoDelay(ISampleProvider fuente, int offsetMiliSegundos)
+        public EfectoDelay(ISampleProvider fuente, int offsetMiliSegundos, float ganancia)
         {
             this.fuente = fuente;
-            this.offsetMiliSegundos = offsetMiliSegundos;
+            this.OffsetMiliSegundos = offsetMiliSegundos;
+            this.Ganancia = ganancia;
 
             tamañoBuffer = fuente.WaveFormat.SampleRate * 20 * fuente.WaveFormat.Channels;
 
@@ -81,7 +104,7 @@ namespace Reproductor
             {
                 for (int i = 0; i < read; i++)
                 {
-                    buffer[i + offset] = muestras[(cantidadMuestrasTranscurridas - cantidadMuestrasBorradas) + i - numeroMuestrasOffset];
+                    buffer[i + offset] += ganancia * muestras[(cantidadMuestrasTranscurridas - cantidadMuestrasBorradas) + i - numeroMuestrasOffset];
                 }
             }
 
